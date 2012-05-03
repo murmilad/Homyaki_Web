@@ -4,15 +4,9 @@ use strict;
 
 use Exporter;
 
-use base 'Homyaki::Factory';
+use Homyaki::DBI::Interface::Interface_Handler;
 
-use constant INTERFACE_MAP => {
-	main         => 'Homyaki::Interface::Interface_Factory',
-	default      => 'Homyaki::Interface::Interface_Factory',
-	gallery      => 'Homyaki::Interface::Gallery::Interface_Factory',
-	task         => 'Homyaki::Interface::Task_Manager::Interface_Factory',
-	geo_maps     => 'Homyaki::Interface::Geo_Maps::Interface_Factory',
-};
+use base 'Homyaki::Factory';
 
 sub create_interface_factory{
 	my $class = shift;
@@ -24,17 +18,16 @@ sub create_interface_factory{
 	my $interface;
 
 	
-	if (&INTERFACE_MAP->{$handler}) {
-		$class->require_handler(&INTERFACE_MAP->{$handler});
-		&INTERFACE_MAP->{$handler}->new(
-			params => $params,
-		);
-	} else {
-		$class->require_handler(&INTERFACE_MAP->{default});
-		&INTERFACE_MAP->{default}->new(
+	my $handler_data = Homyaki::DBI::Interface::Interface_Handler->retrieve($handler || 'main');
+
+	if ($handler_data) {
+		$class->require_handler($handler_data->{handler});
+		$interface = $handler_data->{handler}->new(
 			params => $params,
 		);
 	}
+
+	return $interface;
 }
 
 1;

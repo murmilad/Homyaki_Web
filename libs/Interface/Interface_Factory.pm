@@ -4,18 +4,11 @@ use strict;
 
 use Exporter;
 
+use Homyaki::DBI::Interface::Form_Handler; 
+
 use base 'Homyaki::Factory';
 
-use constant INTERFACE_MAP => {
-	main                => 'Homyaki::Interface::Default',
-	ip_log              => 'Homyaki::Interface::Log_Analize',
-	default             => 'Homyaki::Interface::Default',
-	geo_maps            => 'Homyaki::Interface::Geo_Maps',
-	geo_types           => 'Homyaki::Interface::Geo_Maps::Geo_Types',
-	test_task           => 'Homyaki::Interface::Task_Manager::Test_Task',
-	parter_tickets_task => 'Homyaki::Interface::Task_Manager::Parter_Tickets_Task',
-	gallery_update_task => 'Homyaki::Interface::Task_Manager::Gallery_Update_Task',
-};
+use constant DEFAULT_FORM => 'main';
 
 sub new {
 	my $this = shift;
@@ -32,19 +25,21 @@ sub new {
 }
 
 sub create_interface{
-        my $this = shift;
+    my $this = shift;
 
 	my %h = @_;
 	my $form   = $h{form};
 	my $params = $h{params};
 	my $interface;
 
-	$form = $this->INTERFACE_MAP->{$form} ? $form : 'default';
+	my $handler_data =  Homyaki::DBI::Interface::Form_Handler->retrieve($form || $this->DEFAULT_FORM);
 
-	$this->require_handler($this->INTERFACE_MAP->{$form});
+	if ($handler_data) {
+		$this->require_handler($handler_data->{handler});
 
-	$this->INTERFACE_MAP->{$form}->new(
-		params => $params,
-	);
+		$handler_data->{handler}->new(
+			params => $params,
+		);
+	}
 }
 1;
