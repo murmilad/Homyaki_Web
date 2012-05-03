@@ -8,7 +8,8 @@ use Homyaki::DBI::Interface::Form_Handler;
 
 use base 'Homyaki::Factory';
 
-use constant DEFAULT_FORM => 'main';
+use constant DEFAULT_FORM   => 'main';
+use constant INTERFACE_NAME => 'main';
 
 sub new {
 	my $this = shift;
@@ -32,7 +33,10 @@ sub create_interface{
 	my $params = $h{params};
 	my $interface;
 
-	my $handler_data =  Homyaki::DBI::Interface::Form_Handler->retrieve($form || $this->DEFAULT_FORM);
+	my $handler_data =  Homyaki::DBI::Interface::Form_Handler->retrieve(
+		name           => $form || $this->DEFAULT_FORM,
+		interface_name => $this->INTERFACE_NAME
+	);
 
 	if ($handler_data) {
 		$this->require_handler($handler_data->{handler});
