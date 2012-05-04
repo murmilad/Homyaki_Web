@@ -1,3 +1,8 @@
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `homyaki_web` /*!40100 DEFAULT CHARACTER SET utf8 */;
+
+USE `homyaki_web`;
+
+
 CREATE TABLE `interface_handlers` (
   `name` char(128) NOT NULL,
   `handler` char(128) DEFAULT NULL,
