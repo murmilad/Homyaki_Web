@@ -5,6 +5,9 @@ use strict;
 use Exporter;
 
 use Homyaki::DBI::Interface::Form_Handler; 
+use Homyaki::Logger;
+
+use Data::Dumper;
 
 use base 'Homyaki::Factory';
 
@@ -33,17 +36,28 @@ sub create_interface{
 	my $params = $h{params};
 	my $interface;
 
+	my $request_params = {
+		name           => $form || $this->DEFAULT_FORM,
+		interface_name => $this->INTERFACE_NAME,
+		this => $this,
+	};
+	Homyaki::Logger::print_log(' Homyaki::Interface::Interface_Factory rp = ' . Dumper($request_params));
+
 	my $handler_data =  Homyaki::DBI::Interface::Form_Handler->retrieve(
 		name           => $form || $this->DEFAULT_FORM,
-		interface_name => $this->INTERFACE_NAME
+		interface_name => $this->INTERFACE_NAME,
 	);
 
+	Homyaki::Logger::print_log(' Homyaki::Interface::Interface_Factory hd = ' . Dumper($handler_data));
+	
 	if ($handler_data) {
 		$this->require_handler($handler_data->{handler});
 
-		$handler_data->{handler}->new(
+		$interface = $handler_data->{handler}->new(
 			params => $params,
 		);
 	}
+
+	return $interface;
 }
 1;

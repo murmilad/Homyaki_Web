@@ -1,4 +1,4 @@
-package Homyaki::DBI::Interface
+package Homyaki::DBI::Interface;
 
 use strict;
 use Class::DBI ();
