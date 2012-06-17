@@ -6,6 +6,8 @@ use Homyaki::Tag;
 use Homyaki::HTML;
 use Homyaki::HTML::Constants;
 
+use Homyaki::Interface::Navigation_Factory;
+
 use Homyaki::Interface;
 use base 'Homyaki::Interface';
 
@@ -69,12 +71,22 @@ sub get_tag {
 		),
 	);
 
+
 	my $main_form = {};
 
 	my $main_form_table  = $form->add(
 		type         => &TAG_TABLE,
 		&PARAM_NAME  => "table_main",
 		&PARAM_ID    => "table_main",
+	);
+
+	my $navigation_factory = Homyaki::Interface::Navigation_Factory->new();
+	my $navigation = $navigation_factory->create_navigation(
+		name => 'simple'
+	);	
+
+	$main_form_table = $navigation->add_navigation(
+		form_table => $main_form_table
 	);
 
 	if (scalar(@{$helper_tag->{child}}) > 0){
