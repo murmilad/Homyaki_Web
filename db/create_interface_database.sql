@@ -10,6 +10,14 @@ CREATE TABLE `interface_handlers` (
   PRIMARY KEY (`name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
+CREATE TABLE `navigation_items` (
+  `name` char(128) NOT NULL,
+  `parrent_name` char(128) NOT NULL,
+  `header` char(128) DEFAULT NULL,
+  `uri` char(128) DEFAULT NULL,
+  PRIMARY KEY (`name`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+
 CREATE TABLE `navigation_handlers` (
   `name` char(128) NOT NULL,
   `handler` char(128) DEFAULT NULL,

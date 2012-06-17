@@ -20,4 +20,4 @@ use warnings;
  
 use base 'Homyaki::Interface::Navigation';
 
-
+1;

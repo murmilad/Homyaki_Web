@@ -19,6 +19,8 @@ package Homyaki::Interface::Navigation;
 use strict;
 use warnings;
 
+use Homyaki::DBI::Interface::Navigation_Item;
+
 sub new {
 	my $this = shift;
 	my %h = @_;
@@ -29,6 +31,7 @@ sub new {
 	my $class = ref($this) || $this;
 
 	bless $self, $class;
+	$self->{navigation_list} = {};
 
 	return $self;
 }
@@ -41,3 +44,18 @@ sub add_navigation {
 
 	return $form_table;
 }
+
+sub get_navigation_list {
+	my $this = shift;
+	my %h = @_;
+
+	my $parrent = $h{parrent};
+
+	unless ($this->{navigation_list}->{$parrent}) {
+		$this->{navigation_list}->{$parrent} =	Homyaki::DBI::Interface::Navigation_Item->search(
+			parrent_name => $parrent
+		);
+	}
+}
+
+1;
