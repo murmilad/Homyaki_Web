@@ -1,7 +1,6 @@
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `homyaki_web` /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE DATABASE /*!32312*/ IF NOT EXISTS  `homyaki_web`/*!40100 DEFAULT CHARACTER SET utf8 */;
 
 USE `homyaki_web`;
-
 
 CREATE TABLE `interface_handlers` (
   `name` char(128) NOT NULL,
@@ -13,15 +12,15 @@ CREATE TABLE `interface_handlers` (
 CREATE TABLE `navigation_items` (
   `name` char(128) NOT NULL,
   `parrent_name` char(128) NOT NULL,
-  `header` char(128) DEFAULT NULL,
-  `uri` char(128) DEFAULT NULL,
+  `header` char(128) NOT NULL,
+  `uri` char(128) NOT NULL,
   PRIMARY KEY (`name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE `navigation_handlers` (
   `name` char(128) NOT NULL,
-  `handler` char(128) DEFAULT NULL,
-  `description` char(128) DEFAULT NULL,
+  `handler` char(128) NOT NULL,
+  `description` char(128) NOT NULL,
   PRIMARY KEY (`name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
@@ -32,3 +31,4 @@ CREATE TABLE `form_handlers` (
   `description` char(128) DEFAULT NULL,
   PRIMARY KEY (`name`, `interface_name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+

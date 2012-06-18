@@ -35,14 +35,10 @@ sub create_navigation{
 	my $params = $h{params};
 	my $navigation;
 
-	my $request_params = {
-		name => $form || $this->DEFAULT_NAVIGATION,
-		this => $this,
-	};
-	Homyaki::Logger::print_log(' Homyaki::Interface::Navigation_Factory rp = ' . Dumper($request_params));
+	Homyaki::Logger::print_log(' Homyaki::Interface::Navigation_Factory rp = ' . Dumper(\%h));
 
 	my $handler_data =  Homyaki::DBI::Interface::Navigation_Handler->retrieve(
-		name           => $form || $this->DEFAULT_NAVIGATION,
+		name           => $name || $this->DEFAULT_NAVIGATION,
 	);
 
 	Homyaki::Logger::print_log(' Homyaki::Interface::Navigation_Factory hd = ' . Dumper($handler_data));

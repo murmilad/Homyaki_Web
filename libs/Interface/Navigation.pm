@@ -19,6 +19,9 @@ package Homyaki::Interface::Navigation;
 use strict;
 use warnings;
 
+use Homyaki::Tag;
+use Homyaki::HTML;
+use Homyaki::HTML::Constants;
 use Homyaki::DBI::Interface::Navigation_Item;
 
 sub new {
@@ -41,6 +44,9 @@ sub add_navigation {
 	my %h = @_;
 
 	my $form_table = $h{form_table};
+
+	$form_table->{&PARAM_NAME} = "table_navigation_container";
+	$form_table->{&PARAM_ID}   = "table_navigation_container";
 
 	return $form_table;
 }

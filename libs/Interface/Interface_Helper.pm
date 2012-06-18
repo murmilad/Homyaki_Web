@@ -86,6 +86,7 @@ sub get_tag {
 	);	
 
 	$main_form_table = $navigation->add_navigation(
+		params     => $params,
 		form_table => $main_form_table
 	);
 
