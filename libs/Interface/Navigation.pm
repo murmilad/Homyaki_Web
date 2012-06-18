@@ -55,13 +55,15 @@ sub get_navigation_list {
 	my $this = shift;
 	my %h = @_;
 
-	my $parrent = $h{parrent};
+	my $parrent = $h{parrent} || '';
 
 	unless ($this->{navigation_list}->{$parrent}) {
 		$this->{navigation_list}->{$parrent} =	Homyaki::DBI::Interface::Navigation_Item->search(
 			parrent_name => $parrent
 		);
 	}
+
+	return $this->{navigation_list}->{$parrent};
 }
 
 1;

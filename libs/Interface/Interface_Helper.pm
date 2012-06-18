@@ -90,7 +90,7 @@ sub get_tag {
 		form_table => $main_form_table
 	);
 
-	if (scalar(@{$helper_tag->{child}}) > 0){
+	if ($helper_tag && scalar(@{$helper_tag->{child}}) > 0){
 
 
 		$main_form_table->add_form_element(
@@ -143,6 +143,8 @@ sub get_tag {
 		root => $root_tag,
 		body => $form_body_tag
 	};
+}
+sub get_helper {
 }
 
 1;

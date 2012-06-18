@@ -18,10 +18,14 @@ package Homyaki::Interface::Navigation::Simple;
 
 use strict;
 use warnings;
+
+use Data::Dumper;
  
 use Homyaki::Tag;
 use Homyaki::HTML;
 use Homyaki::HTML::Constants;
+
+use Homyaki::Logger;
 
 use base 'Homyaki::Interface::Navigation';
 
@@ -32,9 +36,12 @@ sub add_navigation {
 	my $params     = $h{params};
 	my $form_table = $h{form_table};
 
-	my $navigation_list = get_navigation_list(
+	my $navigation_list = $self->get_navigation_list(
 		parrent => $params->{navigation_parrent},
 	);
+
+	Homyaki::Logger::print_log('Homyaki::Interface::Navigation::Simple params = ' . Dumper(\%h));
+	Homyaki::Logger::print_log('Homyaki::Interface::Navigation::Simple navigation_list->count = ' . $navigation_list->count());
 
 	return $form_table
 		if ($navigation_list->count() == 0);
@@ -50,10 +57,11 @@ sub add_navigation {
 	);
 
 	my $navigation_col = $form_table->add(
-		type        => &TAG_COLUMN,
-		&PARAM_NAME => 'container_menue',
-		&PARAM_ID   => 'container_menue',
-		&PARAM_SIZE	=> '200',
+		type         => &TAG_COLUMN,
+		&PARAM_NAME  => 'container_menue',
+		&PARAM_ID    => 'container_menue',
+		&PARAM_SIZE	 => '200',
+		&PARAM_STYLE => 'vertical-align:top',
 	);
 
 
@@ -61,9 +69,10 @@ sub add_navigation {
 		type => &TAG_LIST,
 	);
 
-	foreach (my $menue_item = $navigation_list->next()){
+#	$navigation_list->first();
+	while (my $menue_item = $navigation_list->next()){
 		my $navigation_item_tag = $navigation_list_tag->add(
-			type => &TAG_LIST,
+			type => &TAG_LIST_ITEM,
 		);
 		$navigation_item_tag->add(
 			type        => &TAG_A,
