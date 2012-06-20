@@ -207,6 +207,7 @@ sub new {
 
 	my $type = $h{type};
 	my $body = $h{body};
+	my $body_before = $h{body_before};
 	my $parrent = $h{parrent};
 
 	my $self = {};
@@ -214,6 +215,7 @@ sub new {
 	if (grep {$_ eq $type} @{&SUPPORTED_TAGS}) {
 		$self->{type}  = $type;
 		$self->{body}  = $body;
+		$self->{body_before}  = $body_before;
 		$self->{child} = [];
 		$self->{parrent} = $parrent;
 
@@ -234,6 +236,7 @@ sub add {
 
 	my $type = $h{type};
 	my $body = $h{body};
+	my $body_before = $h{body_before};
 	my $tags = $h{tags};
 	my $tag  = $h{tag};
 
@@ -243,6 +246,7 @@ sub add {
 		my $params = {};
 		$params->{type} = $type;
 		$params->{body} = $body;
+		$params->{body_before} = $body_before;
 		$params->{parrent} = $self;
 		map {$params->{$_} = $h{$_}} keys %{&SUPPORTED_PARAMETERS_MAP};
 
@@ -301,8 +305,12 @@ sub to_str {
 		)
 		|| ref($self->{child}) eq 'Scoring::Tag'
 		|| $self->{body}
+		|| $self->{body_before}
 	) {
 		$tag_str .= ">\n";
+		if ($self->{body_before}) {
+			$tag_str .= $self->{body_before};
+		}
 		if ($self->{child}) {
 			if (ref($self->{child}) eq 'ARRAY'){
 				foreach my $child_tag (@{$self->{child}}){

@@ -104,10 +104,10 @@ sub add_navigation_items {
 			if ($menue->{$menue_item}->{menue}) {
 				my $sub_menue_item = $list_tag->add(
 					type => &TAG_LIST_ITEM,
+					body_before => $menue_item	
 				);
 				my $sub_menue_list = $sub_menue_item->add(
 					type => &TAG_LIST,
-					body => $menue_item,
 				);
 				$this->add_navigation_items(
 					menue    => $menue->{$menue_item}->{menue},
