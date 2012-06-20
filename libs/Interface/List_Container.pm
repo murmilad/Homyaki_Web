@@ -86,6 +86,12 @@ sub get_tag {
 		name => 'simple'
 	);
 	
+	$main_form_table = $navigation->add_navigation(
+		user       => $user,
+		params     => $params,
+		form_table => $main_form_table
+	);
+
 	if (scalar(@{$helper_tag->{child}}) > 0){
 
 

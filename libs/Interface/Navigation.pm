@@ -44,8 +44,7 @@ sub add_navigation {
 
 	my $form_table = $h{form_table};
 	my $params     = $h{params};
-	my $user     = $h{user};
-
+	my $user       = $h{user};
 
 
 	$form_table->{&PARAM_NAME} = "table_navigation_container";
@@ -58,6 +57,7 @@ sub get_navigation_list {
 	my $this = shift;
 	my %h = @_;
 	my $user    = $h{user};
+	my $params  = $h{params};
 	my $parrent = $h{parrent} || '';
 
 	unless ($this->{navigation_list}) {

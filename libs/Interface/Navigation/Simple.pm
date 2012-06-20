@@ -73,6 +73,7 @@ sub add_navigation {
 	foreach my $menue (map {$_->{menue}} @{$navigation_list}) {
 		$self->add_navigation_items(
 			menue    => $menue,
+			params   => $params,
 			list_tag => $navigation_list_tag,
 		);
 	}
@@ -97,25 +98,34 @@ sub add_navigation_items {
 	my $this = shift;
 	my %h = @_;
 	my $menue    = $h{menue};
+	my $params   = $h{params};
 	my $list_tag = $h{list_tag};
 
 	if (ref($menue) eq 'HASH') {
 		foreach my $menue_item (keys %{$menue}){
 			if ($menue->{$menue_item}->{menue}) {
 				my $sub_menue_item = $list_tag->add(
-					type => &TAG_LIST_ITEM,
-					body_before => $menue_item	
+					type         => &TAG_LIST_ITEM,
+					body_before  => $menue_item,
+					&PARAM_STYLE => 'list-style-type: none; color:#666666;',	
 				);
 				my $sub_menue_list = $sub_menue_item->add(
 					type => &TAG_LIST,
 				);
 				$this->add_navigation_items(
 					menue    => $menue->{$menue_item}->{menue},
-					list_tag => $sub_menue_list
+					params   => $params,
+					list_tag => $sub_menue_list,
 				);
 			} else {
+				my $current_item = (
+					$params->{interface} eq $menue->{$menue_item}->{interface}
+					&& $params->{form} eq $menue->{$menue_item}->{form}
+				);
+
 				my $navigation_item_tag = $list_tag->add(
-					type => &TAG_LIST_ITEM,
+					type         => &TAG_LIST_ITEM,
+					&PARAM_STYLE => $current_item ? 'color:#DDDDDD; list-style-type: circle;' : 'list-style-type: none;',	
 				);
 				$navigation_item_tag->add(
 					type         => &TAG_A,
@@ -123,6 +133,7 @@ sub add_navigation_items {
 					&PARAM_LINK  => $menue->{$menue_item}->{uri} 
 						|| ('/engine/?interface=' . $menue->{$menue_item}->{interface} . '&form=' . $menue->{$menue_item}->{form}),
 					body         => $menue_item,
+					&PARAM_STYLE => $current_item ? '' : 'color:#666666;',	
 				);
 			}
 		}
