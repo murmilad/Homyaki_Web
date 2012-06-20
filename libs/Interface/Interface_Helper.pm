@@ -2,6 +2,8 @@ package Homyaki::Interface::Interface_Helper;
 
 use strict;
 
+use Data::Dumper;
+
 use Homyaki::Tag;
 use Homyaki::HTML;
 use Homyaki::HTML::Constants;
@@ -16,6 +18,7 @@ sub get_form {
 	my $self = shift;
 	my %h = @_;
 
+	my $user     = $h{user};
 	my $params   = $h{params};
 	my $errors   = $h{errors};
 	my $body_tag = $h{body_tag};
@@ -80,12 +83,14 @@ sub get_tag {
 		&PARAM_ID    => "table_main",
 	);
 
+	Homyaki::Logger::print_log('Interface_Helper - user ' . Dumper($user));
 	my $navigation_factory = Homyaki::Interface::Navigation_Factory->new();
 	my $navigation = $navigation_factory->create_navigation(
 		name => 'simple'
 	);	
 
 	$main_form_table = $navigation->add_navigation(
+		user       => $user,
 		params     => $params,
 		form_table => $main_form_table
 	);

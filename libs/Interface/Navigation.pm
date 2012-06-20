@@ -22,7 +22,7 @@ use warnings;
 use Homyaki::Tag;
 use Homyaki::HTML;
 use Homyaki::HTML::Constants;
-use Homyaki::DBI::Interface::Navigation_Item;
+use Homyaki::XML::Interface::Navigation;
 
 sub new {
 	my $this = shift;
@@ -34,7 +34,6 @@ sub new {
 	my $class = ref($this) || $this;
 
 	bless $self, $class;
-	$self->{navigation_list} = {};
 
 	return $self;
 }
@@ -44,6 +43,10 @@ sub add_navigation {
 	my %h = @_;
 
 	my $form_table = $h{form_table};
+	my $params     = $h{params};
+	my $user     = $h{user};
+
+
 
 	$form_table->{&PARAM_NAME} = "table_navigation_container";
 	$form_table->{&PARAM_ID}   = "table_navigation_container";
@@ -54,16 +57,49 @@ sub add_navigation {
 sub get_navigation_list {
 	my $this = shift;
 	my %h = @_;
-
+	my $user    = $h{user};
 	my $parrent = $h{parrent} || '';
 
-	unless ($this->{navigation_list}->{$parrent}) {
-		$this->{navigation_list}->{$parrent} =	Homyaki::DBI::Interface::Navigation_Item->search(
-			parrent_name => $parrent
-		);
+	unless ($this->{navigation_list}) {
+		my $navigation_list = Homyaki::XML::Interface::Navigation->get_navigation();
+		grep {$_ eq 'writer'} @{$user->{permissions}};
+		foreach my $menue (map {$_->{menue}} @{$navigation_list}) {
+			$this->remove_unpermitted_items(
+				menue => $menue,
+				user  => $user
+			);
+		}
+		$this->{navigation_list} = $navigation_list;
 	}
 
-	return $this->{navigation_list}->{$parrent};
+	return $this->{navigation_list};
+}
+
+sub remove_unpermitted_items{
+	my $this = shift;
+	my %h = @_;
+	my $user  = $h{user};
+	my $menue = $h{menue};
+
+	if (ref($menue) eq 'HASH') {
+		foreach my $menue_item (keys %{$menue}){
+			if ($menue->{$menue_item}->{menue}) {
+				$this->remove_unpermitted_items(
+					menue => $menue->{$menue_item}->{menue},
+					user  => $user
+				);
+			} else {
+				my $user_has_permission = 0;
+				foreach my $menue_item_permission (@{$menue->{$menue_item}->{permission}}) {
+					if (grep {$_ eq $menue_item_permission} @{$user->{permissions}}) {
+						$user_has_permission = 1;
+					}
+				}
+				delete($menue->{$menue_item})
+					unless ($user_has_permission);
+			}
+		}
+	}
 }
 
 1;

@@ -23,7 +23,7 @@ sub get_user{
 	my $user_id = $h{user_id};
 
 	my $user = {
-		permissions => 'guest'
+		permissions => ['guest']
 	};
 
 	return $user;

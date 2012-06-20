@@ -7,6 +7,8 @@ use Homyaki::HTML;
 use Homyaki::HTML::Constants;
 use Homyaki::Interface::Geo_Maps::Geo_Types;
 
+use Homyaki::Interface::Navigation_Factory;
+
 use Homyaki::Interface;
 use base 'Homyaki::Interface';
 
@@ -79,6 +81,11 @@ sub get_tag {
 		&PARAM_ID    => "table_main",
 	);
 
+	my $navigation_factory = Homyaki::Interface::Navigation_Factory->new();
+	my $navigation = $navigation_factory->create_navigation(
+		name => 'simple'
+	);
+	
 	if (scalar(@{$helper_tag->{child}}) > 0){
 
 
