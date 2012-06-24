@@ -43,10 +43,9 @@ sub add_navigation {
 
 	Homyaki::Logger::print_log('Homyaki::Interface::Navigation::Simple navigation_list = ' . Dumper($navigation_list));
 	Homyaki::Logger::print_log('Homyaki::Interface::Navigation::Simple user = ' . Dumper($user));
-	Homyaki::Logger::print_log('Homyaki::Interface::Navigation::Simple navigation_menues count = ' . scalar(@{$navigation_list}));
 
 	return $form_table
-		if (scalar(@{$navigation_list}) == 0);
+		if (scalar(keys %{$navigation_list}) == 0);
 
 	$form_table = $self->SUPER::add_navigation(
 		form_table => $form_table,
@@ -70,13 +69,11 @@ sub add_navigation {
 		type => &TAG_LIST,
 	);
 
-	foreach my $menue (map {$_->{menue}} @{$navigation_list}) {
-		$self->add_navigation_items(
-			menue    => $menue,
-			params   => $params,
-			list_tag => $navigation_list_tag,
-		);
-	}
+	$self->add_navigation_items(
+		menue    => $navigation_list,
+		params   => $params,
+		list_tag => $navigation_list_tag,
+	);
 
 
 	my $body_col = $form_table->add(

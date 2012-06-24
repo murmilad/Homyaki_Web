@@ -19,6 +19,8 @@ package Homyaki::Interface::Navigation;
 use strict;
 use warnings;
 
+use Data::Dumper;
+
 use Homyaki::Tag;
 use Homyaki::HTML;
 use Homyaki::HTML::Constants;
@@ -34,6 +36,9 @@ sub new {
 	my $class = ref($this) || $this;
 
 	bless $self, $class;
+
+	$self->{navigation_menue} = {};
+	$self->{current_path} = [];
 
 	return $self;
 }
@@ -60,34 +65,35 @@ sub get_navigation_list {
 	my $params  = $h{params};
 	my $parrent = $h{parrent} || '';
 
-	unless ($this->{navigation_list}) {
+	unless (scalar(keys %{$this->{navigation_menue}})) {
 		my $navigation_list = Homyaki::XML::Interface::Navigation->get_navigation();
 		grep {$_ eq 'writer'} @{$user->{permissions}};
 		foreach my $menue (map {$_->{menue}} @{$navigation_list}) {
-			$this->remove_unpermitted_items(
+			$this->set_menue_items(
 				menue => $menue,
 				user  => $user
 			);
 		}
-		$this->{navigation_list} = $navigation_list;
 	}
 
-	return $this->{navigation_list};
+	return $this->{navigation_menue};
 }
 
-sub remove_unpermitted_items{
+sub set_menue_items{
 	my $this = shift;
 	my %h = @_;
-	my $user  = $h{user};
 	my $menue = $h{menue};
-
+	my $user  = $h{user};
 	if (ref($menue) eq 'HASH') {
 		foreach my $menue_item (keys %{$menue}){
+			push(@{$this->{current_path}}, $menue_item);
 			if ($menue->{$menue_item}->{menue}) {
-				$this->remove_unpermitted_items(
+				push(@{$this->{current_path}}, 'menue');
+				$this->set_menue_items(
 					menue => $menue->{$menue_item}->{menue},
 					user  => $user
 				);
+				pop(@{$this->{current_path}});
 			} else {
 				my $user_has_permission = 0;
 				foreach my $menue_item_permission (@{$menue->{$menue_item}->{permission}}) {
@@ -95,11 +101,14 @@ sub remove_unpermitted_items{
 						$user_has_permission = 1;
 					}
 				}
-				delete($menue->{$menue_item})
-					unless ($user_has_permission);
+				if ($user_has_permission){
+					eval ('$this->{navigation_menue}->{"' . join ('"}->{"', @{$this->{current_path}}) . '"} = $menue->{$menue_item};');
+				}
 			}
+			pop(@{$this->{current_path}});
 		}
 	}
 }
+
 
 1;
