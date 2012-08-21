@@ -65,16 +65,41 @@ sub add_navigation {
 		&PARAM_STYLE => 'vertical-align:top',
 	);
 
+	my $show_hide_js = $navigation_col->add(
+		type => &TAG_JS,
+	);
+
 	my $navigation_list_tag = $navigation_col->add(
 		type => &TAG_LIST,
 	);
 
+	my $group_count = 0;
+
 	$self->add_navigation_items(
-		menue    => $navigation_list,
-		params   => $params,
-		list_tag => $navigation_list_tag,
+		menue               => $navigation_list,
+		params              => $params,
+		list_tag            => $navigation_list_tag,
+		group_count         => \$group_count,
 	);
 
+	my $i = 1;
+	my $menue_flags_js = join(":false,\n", map {$_ . $i++} split('\|', 'menue_|' x $group_count)) . ':true'; 
+
+	$show_hide_js->{body} = qq{
+		menue_flag={
+			$menue_flags_js
+		};
+
+		function show_hide(name){
+			if (menue_flag[name]) {
+				document.getElementById(name).style.display='none';
+				menue_flag[name] = false;
+			} else {
+				document.getElementById(name).style.display='block';
+				menue_flag[name] = true;
+			}	
+		}
+	};
 
 	my $body_col = $form_table->add(
 		type        => &TAG_COLUMN,
@@ -94,20 +119,25 @@ sub add_navigation {
 sub add_navigation_items {
 	my $this = shift;
 	my %h = @_;
-	my $menue    = $h{menue};
-	my $params   = $h{params};
-	my $list_tag = $h{list_tag};
+	my $menue        = $h{menue};
+	my $params       = $h{params};
+	my $list_tag     = $h{list_tag};
+	my $group_count  = $h{group_count};
 
 	if (ref($menue) eq 'HASH') {
 		foreach my $menue_item (keys %{$menue}){
 			if ($menue->{$menue_item}->{menue}) {
+				$$group_count++;
 				my $sub_menue_item = $list_tag->add(
-					type         => &TAG_LIST_ITEM,
-					body_before  => $menue_item,
-					&PARAM_STYLE => 'list-style-type: none; color:#666666;',	
+					type           => &TAG_LIST_ITEM,
+					body_before    => $menue_item,
+					&PARAM_STYLE   => 'list-style-type: none; color:#666666;',
+					&PARAM_ONCLICK => "show_hide('group_$$group_count');",
 				);
 				my $sub_menue_list = $sub_menue_item->add(
-					type => &TAG_LIST,
+					type         => &TAG_LIST,
+					&PARAM_STYLE => 'display:none;',
+					&PARAM_ID    => "group_$$group_count", 
 				);
 				$this->add_navigation_items(
 					menue    => $menue->{$menue_item}->{menue},
