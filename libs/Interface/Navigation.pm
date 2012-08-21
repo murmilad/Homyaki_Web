@@ -26,6 +26,9 @@ use Homyaki::HTML;
 use Homyaki::HTML::Constants;
 use Homyaki::XML::Interface::Navigation;
 
+use Homyaki::Interface_Factory;
+use Homyaki::Interface::Interface_Factory;
+
 sub new {
 	my $this = shift;
 	my %h = @_;
@@ -86,6 +89,27 @@ sub set_menue_items{
 	my $user  = $h{user};
 	if (ref($menue) eq 'HASH') {
 		foreach my $menue_item (keys %{$menue}){
+
+			# Call get_navigation on form handler
+			if ($menue->{$menue_item}->{interface} && $menue->{$menue_item}->{form}) {
+				my $interface_factory = Homyaki::Interface_Factory->create_interface_factory(
+					handler => $menue->{$menue_item}->{interface}
+				);
+				if ($interface_factory){
+					my $form = $interface_factory->create_interface(
+						form => $menue->{$menue_item}->{form}
+					);
+					if ($form) {
+						my $menue = $form->get_navigation(
+							user => $user
+						);
+						if (scalar(keys %{$menue}) > 0){
+							$menue->{$menue_item}->{menue} = $menue;
+						}
+					}
+				}
+			}
+
 			push(@{$this->{current_path}}, $menue_item);
 			if ($menue->{$menue_item}->{menue}) {
 				push(@{$this->{current_path}}, 'menue');

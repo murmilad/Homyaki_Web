@@ -21,10 +21,13 @@ sub create_interface_factory{
 	my $handler_data = Homyaki::DBI::Interface::Interface_Handler->retrieve($handler || 'main');
 
 	if ($handler_data) {
-		$class->require_handler($handler_data->{handler});
+		eval {
+			$class->require_handler($handler_data->{handler});
+		};
+
 		$interface = $handler_data->{handler}->new(
 			params => $params,
-		);
+		) unless $@;
 	}
 
 	return $interface;

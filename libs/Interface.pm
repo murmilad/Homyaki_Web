@@ -193,5 +193,16 @@ sub get_form {
         };
 }
 
+sub get_navigation {
+	my $self = shift;
+	my %h = @_;
+
+	my $params   = $h{params};
+	my $user     = $h{user};
+
+	my $navigation = {};
+
+	return $navigation;
+}
 
 1;

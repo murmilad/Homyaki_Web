@@ -51,11 +51,13 @@ sub create_interface{
 	Homyaki::Logger::print_log(' Homyaki::Interface::Interface_Factory hd = ' . Dumper($handler_data));
 	
 	if ($handler_data) {
-		$this->require_handler($handler_data->{handler});
+		eval {
+			$this->require_handler($handler_data->{handler});
+		};
 
 		$interface = $handler_data->{handler}->new(
 			params => $params,
-		);
+		) unless $@;
 	}
 
 	return $interface;

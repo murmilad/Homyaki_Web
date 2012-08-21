@@ -128,7 +128,7 @@ sub add_navigation_items {
 					type         => &TAG_A,
 					&PARAM_CLASS => 'param_normal',
 					&PARAM_LINK  => $menue->{$menue_item}->{uri} 
-						|| ('/engine/?interface=' . $menue->{$menue_item}->{interface} . '&form=' . $menue->{$menue_item}->{form}),
+						|| ('/engine/?interface=' . $menue->{$menue_item}->{interface} . '&form=' . $menue->{$menue_item}->{form} . $menue->{$menue_item}->{parameters}),
 					body         => $menue_item,
 					&PARAM_STYLE => $current_item ? '' : 'color:#666666;',	
 				);
