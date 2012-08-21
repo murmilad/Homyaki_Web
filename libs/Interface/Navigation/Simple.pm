@@ -92,10 +92,12 @@ sub add_navigation {
 
 		function show_hide(name){
 			if (menue_flag[name]) {
-				document.getElementById(name).style.display='none';
+				document.getElementById('group_' + name).style.display='none';
+				document.getElementById('button_' + name).innerHTML='+';
 				menue_flag[name] = false;
 			} else {
-				document.getElementById(name).style.display='block';
+				document.getElementById('group_' + name).style.display='block';
+				document.getElementById('button_' + name).innerHTML='-';
 				menue_flag[name] = true;
 			}	
 		}
@@ -130,9 +132,8 @@ sub add_navigation_items {
 				$$group_count++;
 				my $sub_menue_item = $list_tag->add(
 					type           => &TAG_LIST_ITEM,
-					body_before    => $menue_item,
+					body_before    => $menue_item . ' <b style="font-size:20px" id="button_' . $$group_count . '" onClick="show_hide(\'' . $$group_count . '\');">+</b>',
 					&PARAM_STYLE   => 'list-style-type: none; color:#666666;',
-					&PARAM_ONCLICK => "show_hide('group_$$group_count');",
 				);
 				my $sub_menue_list = $sub_menue_item->add(
 					type         => &TAG_LIST,
