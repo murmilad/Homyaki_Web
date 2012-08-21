@@ -83,7 +83,7 @@ sub add_navigation {
 	);
 
 	my $i = 1;
-	my $menue_flags_js = join(":false,\n", map {$_ . $i++} split('\|', 'menue_|' x $group_count)) . ':true'; 
+	my $menue_flags_js = join(":false,\n", map {$_ . $i++} split('\|', 'group_|' x $group_count)) . ':false'; 
 
 	$show_hide_js->{body} = qq{
 		menue_flag={
@@ -140,16 +140,21 @@ sub add_navigation_items {
 					&PARAM_ID    => "group_$$group_count", 
 				);
 				$this->add_navigation_items(
-					menue    => $menue->{$menue_item}->{menue},
-					params   => $params,
-					list_tag => $sub_menue_list,
+					menue       => $menue->{$menue_item}->{menue},
+					params      => $params,
+					list_tag    => $sub_menue_list,
+					group_count => $group_count
 				);
 			} else {
 				my $current_item = (
 					$params->{interface} eq $menue->{$menue_item}->{interface}
 					&& $params->{form} eq $menue->{$menue_item}->{form}
+					&& $params->{parameters} eq $menue->{$menue_item}->{parameters}
 				);
 
+				if ($current_item) {
+					$list_tag->{&PARAM_STYLE} =  'display:block;';
+				}
 				my $navigation_item_tag = $list_tag->add(
 					type         => &TAG_LIST_ITEM,
 					&PARAM_STYLE => $current_item ? 'color:#DDDDDD; list-style-type: circle;' : 'list-style-type: none;',	

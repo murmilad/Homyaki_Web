@@ -91,7 +91,7 @@ sub set_menue_items{
 		foreach my $menue_item (keys %{$menue}){
 
 			# Call get_navigation on form handler
-			if ($menue->{$menue_item}->{interface} && $menue->{$menue_item}->{form}) {
+			if ($menue->{$menue_item}->{interface} && $menue->{$menue_item}->{form} && $menue->{$menue_item}->{dynamic_navigation}) {
 				my $interface_factory = Homyaki::Interface_Factory->create_interface_factory(
 					handler => $menue->{$menue_item}->{interface}
 				);
@@ -100,11 +100,13 @@ sub set_menue_items{
 						form => $menue->{$menue_item}->{form}
 					);
 					if ($form) {
-						my $menue = $form->get_navigation(
-							user => $user
+						my $form_menue = $form->get_navigation(
+							user             => $user,
+							menue_permission => $menue->{$menue_item}->{permission},
 						);
-						if (scalar(keys %{$menue}) > 0){
-							$menue->{$menue_item}->{menue} = $menue;
+						if (scalar(keys %{$form_menue}) > 0){
+							Homyaki::Logger::print_log('Html_Photo_Albums: res:' . Dumper($form_menue));
+							$menue->{$menue_item}->{menue} = $form_menue;
 						}
 					}
 				}
