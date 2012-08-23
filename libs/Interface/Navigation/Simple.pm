@@ -119,6 +119,17 @@ sub add_navigation {
 	return $main_form_table;
 }
 
+sub set_parrent_group_opened{
+	my $parrent_group = shift;
+
+	if ($parrent_group->{type} eq &TAG_LIST) {
+		$parrent_group->{&PARAM_STYLE} =  'display:block;padding-left:5px;';
+	}
+	if ($parrent_group->{type} eq &TAG_LIST || $parrent_group->{type} eq &TAG_LIST_ITEM) {
+		set_parrent_group_opened($parrent_group->{parrent})
+	}
+}
+
 sub add_navigation_items {
 	my $this = shift;
 	my %h = @_;
@@ -155,7 +166,7 @@ sub add_navigation_items {
 				);
 
 				if ($current_item) {
-					$list_tag->{&PARAM_STYLE} =  'display:block;padding-left:5px;';
+					set_parrent_group_opened($list_tag);
 				}
 				my $navigation_item_tag = $list_tag->add(
 					type         => &TAG_LIST_ITEM,
