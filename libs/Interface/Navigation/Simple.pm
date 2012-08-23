@@ -41,9 +41,6 @@ sub add_navigation {
 		parrent => $params->{navigation_parrent},
 	);
 
-	Homyaki::Logger::print_log('Homyaki::Interface::Navigation::Simple navigation_list = ' . Dumper($navigation_list));
-	Homyaki::Logger::print_log('Homyaki::Interface::Navigation::Simple user = ' . Dumper($user));
-
 	return $form_table
 		if (scalar(keys %{$navigation_list}) == 0);
 
@@ -162,7 +159,7 @@ sub add_navigation_items {
 				my $current_item = (
 					$params->{interface} eq $menue->{$menue_item}->{interface}
 					&& $params->{form} eq $menue->{$menue_item}->{form}
-					&& $params->{parameters} eq $menue->{$menue_item}->{parameters}
+					&& $params->{navi_parameters} eq $menue->{$menue_item}->{navi_parameters}
 				);
 
 				if ($current_item) {
@@ -176,7 +173,7 @@ sub add_navigation_items {
 					type         => &TAG_A,
 					&PARAM_CLASS => 'param_normal',
 					&PARAM_LINK  => $menue->{$menue_item}->{uri} 
-						|| ('/engine/?interface=' . $menue->{$menue_item}->{interface} . '&form=' . $menue->{$menue_item}->{form} . $menue->{$menue_item}->{parameters}),
+						|| ('/engine/?interface=' . $menue->{$menue_item}->{interface} . '&form=' . $menue->{$menue_item}->{form} . ($menue->{$menue_item}->{navi_parameters} ? '&navi_parameters=' . $menue->{$menue_item}->{navi_parameters} : '')),
 					body         => $menue_item,
 					&PARAM_STYLE => $current_item ? '' : 'color:#666666;',	
 				);
