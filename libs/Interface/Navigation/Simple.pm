@@ -71,7 +71,7 @@ sub add_navigation {
 
 	my $navigation_list_tag = $navigation_col->add(
 		type => &TAG_LIST,
-		&PARAM_STYLE => 'padding-left:4px;'
+		&PARAM_STYLE => 'padding-left:5px;'
 	);
 
 	my $group_count = 0;
@@ -128,7 +128,7 @@ sub add_navigation_items {
 	my $group_count  = $h{group_count};
 
 	if (ref($menue) eq 'HASH') {
-		foreach my $menue_item (keys %{$menue}){
+		foreach my $menue_item (sort {$menue->{$a}->{order} <=> $menue->{$b}->{order}} keys %{$menue}){
 			if ($menue->{$menue_item}->{menue}) {
 				$$group_count++;
 				my $sub_menue_item = $list_tag->add(
@@ -138,7 +138,7 @@ sub add_navigation_items {
 				);
 				my $sub_menue_list = $sub_menue_item->add(
 					type         => &TAG_LIST,
-					&PARAM_STYLE => 'display:none;padding-left:4px;',
+					&PARAM_STYLE => 'display:none;padding-left:5px;',
 					&PARAM_ID    => "group_$$group_count", 
 				);
 				$this->add_navigation_items(
@@ -155,7 +155,7 @@ sub add_navigation_items {
 				);
 
 				if ($current_item) {
-					$list_tag->{&PARAM_STYLE} =  'display:block;padding-left:4px;';
+					$list_tag->{&PARAM_STYLE} =  'display:block;padding-left:5px;';
 				}
 				my $navigation_item_tag = $list_tag->add(
 					type         => &TAG_LIST_ITEM,
