@@ -58,7 +58,6 @@ sub add_navigation {
 		type         => &TAG_COLUMN,
 		&PARAM_NAME  => 'container_menue',
 		&PARAM_ID    => 'container_menue',
-		&PARAM_SIZE	 => '200',
 		&PARAM_STYLE => 'vertical-align:top',
 	);
 
@@ -68,7 +67,7 @@ sub add_navigation {
 
 	my $navigation_list_tag = $navigation_col->add(
 		type => &TAG_LIST,
-		&PARAM_STYLE => 'padding-left:5px;'
+		&PARAM_STYLE => 'padding:0px;'
 	);
 
 	my $group_count = 0;
@@ -105,6 +104,7 @@ sub add_navigation {
 		type        => &TAG_COLUMN,
 		&PARAM_NAME => 'container_body',
 		&PARAM_ID   => 'container_body',
+		&PARAM_STYLE => 'vertical-align:top;width:1024px',
 	);
 
 	my $main_form_table  = $body_col->add(
@@ -120,7 +120,7 @@ sub set_parrent_group_opened{
 	my $parrent_group = shift;
 
 	if ($parrent_group->{type} eq &TAG_LIST) {
-		$parrent_group->{&PARAM_STYLE} =  'display:block;padding-left:5px;';
+		$parrent_group->{&PARAM_STYLE} =  'display:block;padding:5px;';
 	}
 	if ($parrent_group->{type} eq &TAG_LIST || $parrent_group->{type} eq &TAG_LIST_ITEM) {
 		set_parrent_group_opened($parrent_group->{parrent})
@@ -141,12 +141,12 @@ sub add_navigation_items {
 				$$group_count++;
 				my $sub_menue_item = $list_tag->add(
 					type           => &TAG_LIST_ITEM,
-					body_before    => $menue_item . ' <b style="font-size:20px" id="button_' . $$group_count . '" onClick="show_hide(\'' . $$group_count . '\');">+</b>',
-					&PARAM_STYLE   => 'list-style-type: none; color:#666666;',
+					body_before    => $menue_item . ' <b style="font-size:16px" id="button_' . $$group_count . '" onClick="show_hide(\'' . $$group_count . '\');">+</b>',
+					&PARAM_STYLE   => 'list-style-type: none; color:#666666;font-size:10px',
 				);
 				my $sub_menue_list = $sub_menue_item->add(
 					type         => &TAG_LIST,
-					&PARAM_STYLE => 'display:none;padding-left:5px;',
+					&PARAM_STYLE => 'display:none;padding:5px;',
 					&PARAM_ID    => "group_$$group_count", 
 				);
 				$this->add_navigation_items(
@@ -167,7 +167,7 @@ sub add_navigation_items {
 				}
 				my $navigation_item_tag = $list_tag->add(
 					type         => &TAG_LIST_ITEM,
-					&PARAM_STYLE => $current_item ? 'color:#DDDDDD; list-style-type: circle;' : 'list-style-type: none;',	
+					&PARAM_STYLE => $current_item ? 'color:#DDDDDD; list-style-type: circle;font-size:10px' : 'list-style-type: none;font-size:10px',	
 				);
 				$navigation_item_tag->add(
 					type         => &TAG_A,
