@@ -70,17 +70,18 @@ sub add_navigation {
 		&PARAM_STYLE => 'padding:0px;margin:0px;'
 	);
 
-	my $group_count = 0;
+	my $group_state = [];
 
 	$self->add_navigation_items(
 		menue               => $navigation_list,
 		params              => $params,
 		list_tag            => $navigation_list_tag,
-		group_count         => \$group_count,
+		group_state         => $group_state,
 	);
 
+	
 	my $i = 1;
-	my $menue_flags_js = join(":false,\n", map {$_ . $i++} split('\|', 'group_|' x $group_count)) . ':false'; 
+	my $menue_flags_js = join(",\n", map {$i++ . ($_->{expanded} ? ':true' : ':false')} @$group_state); 
 
 	$show_hide_js->{body} = qq{
 		menue_flag={
@@ -117,13 +118,24 @@ sub add_navigation {
 }
 
 sub set_parrent_group_opened{
-	my $parrent_group = shift;
+	my %h = @_;
+	my $parrent_group = $h{parrent_group};
+	my $group_state   = $h{group_state};
 
 	if ($parrent_group->{type} eq &TAG_LIST) {
 		$parrent_group->{&PARAM_STYLE} =  'display:block;padding:5px;margin:0px;';
+		if ($parrent_group->{&PARAM_ID} =~ /^\w+_(\d+)$/) {
+			$group_state->[$1-1]->{expanded} = 1;
+		}
+	} elsif ($parrent_group->{type} eq &TAG_LIST_ITEM) {
+		$parrent_group->{body_before} =~ s/>\+</>-</;
 	}
+
 	if ($parrent_group->{type} eq &TAG_LIST || $parrent_group->{type} eq &TAG_LIST_ITEM) {
-		set_parrent_group_opened($parrent_group->{parrent})
+		set_parrent_group_opened(
+			parrent_group => $parrent_group->{parrent},
+			group_state   => $group_state
+		);
 	}
 }
 
@@ -133,27 +145,27 @@ sub add_navigation_items {
 	my $menue        = $h{menue};
 	my $params       = $h{params};
 	my $list_tag     = $h{list_tag};
-	my $group_count  = $h{group_count};
+	my $group_state  = $h{group_state};
 
 	if (ref($menue) eq 'HASH') {
 		foreach my $menue_item (sort {$menue->{$a}->{order} <=> $menue->{$b}->{order}} keys %{$menue}){
 			if ($menue->{$menue_item}->{menue}) {
-				$$group_count++;
+				push(@{$group_state}, {expanded => 0});
 				my $sub_menue_item = $list_tag->add(
 					type           => &TAG_LIST_ITEM,
-					body_before    => $menue_item . ' <b style="font-size:16px" id="button_' . $$group_count . '" onClick="show_hide(\'' . $$group_count . '\');">+</b>',
+					body_before    => $menue_item . ' <b style="font-size:16px" id="button_' . scalar(@{$group_state}) . '" onClick="show_hide(\'' . scalar(@{$group_state}) . '\');">+</b>',
 					&PARAM_STYLE   => 'list-style-type: none; color:#666666;font-size:10px;margin-top: 8px;',
 				);
 				my $sub_menue_list = $sub_menue_item->add(
 					type         => &TAG_LIST,
 					&PARAM_STYLE => 'display:none;padding:5px;margin:0px;',
-					&PARAM_ID    => "group_$$group_count", 
+					&PARAM_ID    => 'group_' . scalar(@{$group_state}), 
 				);
 				$this->add_navigation_items(
 					menue       => $menue->{$menue_item}->{menue},
 					params      => $params,
 					list_tag    => $sub_menue_list,
-					group_count => $group_count
+					group_state => $group_state
 				);
 			} else {
 				my $current_item = (
@@ -163,7 +175,10 @@ sub add_navigation_items {
 				);
 
 				if ($current_item) {
-					set_parrent_group_opened($list_tag);
+					set_parrent_group_opened(
+						parrent_group => $list_tag,
+						group_state   => $group_state
+					);
 				}
 				my $navigation_item_tag = $list_tag->add(
 					type         => &TAG_LIST_ITEM,
