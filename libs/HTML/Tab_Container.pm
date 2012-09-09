@@ -40,7 +40,8 @@ sub add_tab_container {
 
 		my $tab_element_names = [];
 
-		foreach my $tab_panel (@{$tab_panels}) {
+		foreach my $tab_panel_name (keys %{$tab_panels}) {
+			my $tab_panel = $tab_panels->{$tab_panel_name};
 
 			push(@{$tab_element_names}, "tab_panel_${name}_body_row_$tab_panel->{name}");
 
@@ -60,12 +61,13 @@ sub add_tab_container {
 				name   => "tab_panel_${name}_body_row_$tab_panel->{name}",
 				type   => &TAG_ROW,
 			);
-			$tab_panel_body_row->add(
+			my $tab_panel_body_form = $tab_panel_body_row->add(
 				name           => "tab_panel_${name}_body_col_$tab_panel->{name}",
 				type           => &TAG_COLUMN,
 				&PARAM_COLSPAN => scalar(@{$tab_panels}),
-				tags           => [$tab_panel->{body_tag}],
-			)
+			);
+
+			$tab_panel->{form_body} = $tab_panel_body_form;			
 		}
 
 		my $tab_elements_js = "'" . join("',\n'", @{$tab_element_names}) . "'";
@@ -91,7 +93,7 @@ sub add_tab_container {
 		
 	}
 		
-	return $tab_panel_table;
+	return $tab_panels;
 }
 
 1;
