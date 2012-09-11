@@ -55,6 +55,7 @@ sub add_tab_container {
 				&PARAM_TYPE    => 'button',
 				&PARAM_ONCLICK => "tab_panel_${name}_on_click('tab_panel_${name}_body_row_$tab_panel->{name}');",
 				&PARAM_STYLE   => $params->{"tab_panel_${name}"} eq $tab_panel->{name} ? 'display:inline;' : 'display:none;',
+				body           => $tab_panel->{caption},
 			);
 
 			my $tab_panel_body_row = $tab_panel_table->add(

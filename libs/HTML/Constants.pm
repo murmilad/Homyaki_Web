@@ -6,6 +6,7 @@ use Exporter;
 
 use constant INPUT_TYPE_LIST        => 'list';
 use constant INPUT_TYPE_TEXT        => 'text';
+use constant INPUT_TYPE_FILE        => 'file';
 use constant INPUT_TYPE_MONEY       => 'money';
 use constant INPUT_TYPE_NUMBER      => 'number';
 use constant INPUT_TYPE_PASSWD      => 'password';
@@ -29,6 +30,7 @@ use constant INPUT_TYPES_MAP => {
 	&INPUT_TYPE_LIST        => {type => 'list', cols => 2},
 	&INPUT_TYPE_TEXT        => {type => 'text', cols => 2},
 	&INPUT_TYPE_MONEY       => {type => 'text', cols => 2},
+	&INPUT_TYPE_FILE        => {type => 'file', cols => 2},
 	&INPUT_TYPE_PASSWD      => {type => 'password', cols => 2},
 	&INPUT_TYPE_HIDDEN      => {type => 'hidden', cols => 1},
 	&INPUT_TYPE_IMAGE       => {type => 'image', cols => 1},
@@ -50,6 +52,7 @@ use constant INPUT_TYPES_MAP => {
 @Homyaki::HTML::Constants::EXPORT = qw(
 	&INPUT_TYPE_LIST
 	&INPUT_TYPE_TEXT
+	&INPUT_TYPE_FILE
 	&INPUT_TYPE_MONEY
 	&INPUT_TYPE_NUMBER
 	&INPUT_TYPE_PASSWD
