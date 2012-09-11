@@ -64,7 +64,7 @@ sub add_tab_container {
 
 				my $tab_panel_body_row = $tab_panel_table->add(
 					&PARAM_ID      => "tab_panel_${name}_body_row_$tab_panel->{name}",
-					&PARAM_STYLE   => $params->{"tab_panel_${name}"} eq $tab_panel->{name} ? 'display:inline;' : 'display:none;',
+					&PARAM_STYLE   => $params->{"tab_panel_${name}"} eq $tab_panel->{name} ? '' : 'display:none;',
 					type           => &TAG_ROW,
 				);
 				my $tab_panel_body_form = $tab_panel_body_row->add(
@@ -90,8 +90,13 @@ sub add_tab_container {
 					function tab_panel_${name}_on_click(tab_name){
 						for (var i = 0; i < tab_${name}_elements.length; i++) { 
 							tabElement = document.getElementById(tab_${name}_elements[i]);
-						if (tab_name == tab_${name}_elements[i]){
-							tabElement.style.display = 'inline';
+
+							if (tab_name == tab_${name}_elements[i]){
+								if (document.all) {
+									tabElement.style.display = 'inline';
+								} else { 
+									tabElement.style.display = 'table-row';
+								}
 							} else {
 								tabElement.style.display = 'none';
 							}
