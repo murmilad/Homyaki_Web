@@ -170,13 +170,13 @@ td.tab_body
 	border-right:1px solid silver;
 	border-bottom:1px solid silver;
 }
-input[type="button"].tab_navi_selected
+input.tab_navi_selected
 {
 	background-color:black;
 	border:none;
 	color:silver;
 }
-input[type="button"].tab_navi
+input.tab_navi
 {
 	background-color:black;
 	color:silver;
