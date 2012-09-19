@@ -31,7 +31,8 @@ sub add_tab_container {
 	);
 	
 	$tab_panel_table = $tab_panel_table->add(
-		type   => &TAG_TABLE,
+		type         => &TAG_TABLE,
+		&PARAM_CLASS => 'tab',
 	);
 
 	
@@ -39,37 +40,58 @@ sub add_tab_container {
 
 		if (scalar(keys %{$tab_panels}) > 1) {
 
+
 			my $tab_panel_navi = $tab_panel_table->add(
 				name   => "tab_panel_${name}_navi",
+				type   => &TAG_ROW,
+			);
+
+			my $tab_panel_buffer = $tab_panel_table->add(
 				type   => &TAG_ROW,
 			);
 
 			my $tab_element_names = [];
 
 			foreach my $tab_panel_name (keys %{$tab_panels}) {
+				$params->{"tab_panel_${name}"} = $tab_panel_name
+					unless $params->{"tab_panel_${name}"};
+
 				my $tab_panel = $tab_panels->{$tab_panel_name};
 
-				push(@{$tab_element_names}, "tab_panel_${name}_body_row_$tab_panel->{name}");
+				my $is_current_tab = $params->{"tab_panel_${name}"} eq $tab_panel->{name};
+
+				push(@{$tab_element_names}, $tab_panel->{name});
 
 				my $tab_panel_button = $tab_panel_navi->add(
-					type => &TAG_COLUMN,
+					type         => &TAG_COLUMN,
+					&PARAM_WIDTH => 100,
+					&PARAM_CLASS => $is_current_tab ? 'tab_navi_selected' : 'tab_navi',
+					&PARAM_ID    => "tab_panel_${name}_navi_column_$tab_panel->{name}"
 				);
 
 				$tab_panel_button->add(
 					type           => &TAG_INPUT,
 					&PARAM_TYPE    => 'button',
-					&PARAM_ONCLICK => "tab_panel_${name}_on_click('tab_panel_${name}_body_row_$tab_panel->{name}');",
+					&PARAM_ONCLICK => "tab_panel_${name}_on_click('$tab_panel->{name}');",
+					&PARAM_ID      => "tab_panel_${name}_navi_button_$tab_panel->{name}",
 					&PARAM_VALUE   => $tab_panel->{header},
+					&PARAM_CLASS   => $is_current_tab ? 'tab_navi_selected' : 'tab_navi',
+				);
+
+				$tab_panel_buffer->add(
+					type         => &TAG_COLUMN,
+					&PARAM_CLASS => scalar(@{$tab_panel_buffer->{child}}) ? 'tab_buffer' : 'tab_buffer_l',
 				);
 
 				my $tab_panel_body_row = $tab_panel_table->add(
 					&PARAM_ID      => "tab_panel_${name}_body_row_$tab_panel->{name}",
-					&PARAM_STYLE   => $params->{"tab_panel_${name}"} eq $tab_panel->{name} ? '' : 'display:none;',
+					&PARAM_STYLE   => $is_current_tab ? '' : 'display:none;',
 					type           => &TAG_ROW,
 				);
 				my $tab_panel_body_form = $tab_panel_body_row->add(
 					type           => &TAG_COLUMN,
-					&PARAM_COLSPAN => scalar(keys %{$tab_panels}),
+					&PARAM_COLSPAN => scalar(keys %{$tab_panels}) + 1,
+					&PARAM_CLASS   => 'tab_body',
 				);
 
 				$tab_panel_body_form = $tab_panel_body_form->add(
@@ -78,6 +100,17 @@ sub add_tab_container {
 
 				$tab_panel->{form_body} = $tab_panel_body_form;			
 			}
+
+			$tab_panel_navi->add(
+				type         => &TAG_COLUMN,
+				body         => '&nbsp;',
+				&PARAM_CLASS => 'tab_navi',
+			);
+
+			$tab_panel_buffer->add(
+				type         => &TAG_COLUMN,
+				&PARAM_CLASS => 'tab_buffer_r',
+			);
 
 			my $tab_elements_js = "'" . join("',\n'", @{$tab_element_names}) . "'";
 			$body_tag->add(
@@ -89,7 +122,9 @@ sub add_tab_container {
 
 					function tab_panel_${name}_on_click(tab_name){
 						for (var i = 0; i < tab_${name}_elements.length; i++) { 
-							tabElement = document.getElementById(tab_${name}_elements[i]);
+							tabElement    = document.getElementById('tab_panel_${name}_body_row_' + tab_${name}_elements[i]);
+							naviElement   = document.getElementById('tab_panel_${name}_navi_column_' + tab_${name}_elements[i]);
+							buttonElement = document.getElementById('tab_panel_${name}_navi_button_' + tab_${name}_elements[i]);
 
 							if (tab_name == tab_${name}_elements[i]){
 								if (document.all) {
@@ -97,8 +132,12 @@ sub add_tab_container {
 								} else { 
 									tabElement.style.display = 'table-row';
 								}
+								naviElement.className = 'tab_navi_selected';
+								buttonElement.className = 'tab_navi_selected';
 							} else {
 								tabElement.style.display = 'none';
+								naviElement.className = 'tab_navi';
+								buttonElement.className = 'tab_navi';
 							}
 						}
 					}

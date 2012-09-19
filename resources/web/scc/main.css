@@ -1,0 +1,184 @@
+
+body {
+	background-color:black;
+	color: silver;
+}
+
+h1{
+	color: silver;
+}
+
+input{
+	border          :1px solid silver;
+	background-color:lightgrey;
+	color           :black;
+}
+
+label.param_normal_label_col{
+}
+
+a.param_normal{
+	color: silver;
+}
+
+td.param_normal_label_col{
+	border-width:0px;
+	text-align: right;
+	vertical-align: top;
+}
+
+td.param_normal_value_col{
+	border-width:0px;
+	vertical-align: top;
+	text-align: left;
+}
+
+td.buttons{
+	border-width:0px;
+	text-align: left;
+	padding   : 5px 0;
+	vertical-align: top;
+	text-align: left;
+}
+
+td.param_error{
+	vertical-align: top;
+	text-align: left;
+	border-width:1px;
+	border-style:dashed;
+	border-color:red;
+}
+
+td.param_error_label_col{
+	vertical-align: top;
+	text-align: right;
+	border-width:1px;
+	border-style:dashed;
+	border-color:red;
+}
+
+td.param_error_value_col{
+	vertical-align: top;
+	border-width:1px;
+	border-style:dashed;
+	border-color:red;
+}
+
+
+tr.param_error{
+	border-width:1px;
+	border-style:dashed;
+	border-color:red;
+}
+
+tr.list_1{
+	background-color:#404040
+}
+
+tr.list_2{
+	background-color:#CC6600
+}
+
+tr.param_error_label_row{
+	vertical-align: top;
+	text-align: right;
+	border-width:1px;
+	border-style:dashed;
+	border-color:red;
+}
+
+tr.param_error_value_row{
+	vertical-align: top;
+	border-width:1px;
+	border-style:dashed;
+	border-color:red;
+}
+
+tr.buttons{
+	text-align: left;
+}
+
+label.param_error{
+}
+
+h1.param_error{
+	color: brown;
+}
+
+li.param_error{
+	color: brown;
+}
+
+span.param_normal{
+	color: silver;
+}
+
+span.param_error{
+	color: brown;
+}
+
+span.minor{
+	color: darkolivegreen;
+	font-size: 11px;
+	font-style: italic;
+}
+
+table.tab
+{
+	border-collapse:collapse;
+	border-bottom:1px solid silver;
+}
+td.tab_navi_selected
+{
+	border-left:1px solid silver;
+	border-top:1px solid silver;
+	border-right:1px solid silver;
+	border-bottom:none;
+}
+td.tab_navi
+{
+	border-left:none;
+	border-top:none;
+	border-right:none;
+	border-bottom:1px solid silver;
+}
+td.tab_buffer_r
+{
+	border-left:none;
+	border-top:none;
+	border-right:1px solid silver;
+	border-bottom:none;
+	height:10px;
+}
+td.tab_buffer_l
+{
+	border-left:1px solid silver;
+	border-top:none;
+	border-right:none;
+	border-bottom:none;
+	height:10px;
+}
+td.tab_buffer
+{
+	border:none;
+	height:10px;
+}
+td.tab_body
+{
+	border-left:1px solid silver;
+	border-top:none;
+	border-right:1px solid silver;
+	border-bottom:1px solid silver;
+}
+input[type="button"].tab_navi_selected
+{
+	background-color:black;
+	border:none;
+	color:silver;
+}
+input[type="button"].tab_navi
+{
+	background-color:black;
+	color:silver;
+}
+
