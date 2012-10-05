@@ -26,10 +26,16 @@ sub add_tab_container {
 	my $tab_panels  = $h{tab_panels};
 
 	my $tab_panel_table = $body_tag->add_form_element(
-		name   => "tab_panel_$name",
+		name   => "tab_panel_${name}_body",
 		type   => &INPUT_TYPE_DIV,
 	);
 	
+	$body_tag->add_form_element(
+		name   => "tab_panel_${name}",
+		type   => &INPUT_TYPE_HIDDEN,
+		value  => $params->{"tab_panel_${name}"},
+	);
+
 	$tab_panel_table = $tab_panel_table->add(
 		type         => &TAG_TABLE,
 		&PARAM_CLASS => 'tab',
@@ -126,14 +132,17 @@ sub add_tab_container {
 							naviElement   = document.getElementById('tab_panel_${name}_navi_column_' + tab_${name}_elements[i]);
 							buttonElement = document.getElementById('tab_panel_${name}_navi_button_' + tab_${name}_elements[i]);
 
+							tabNameElement = document.getElementById('tab_panel_${name}');
+
 							if (tab_name == tab_${name}_elements[i]){
 								if (document.all) {
 									tabElement.style.display = 'inline';
 								} else { 
 									tabElement.style.display = 'table-row';
 								}
-								naviElement.className = 'tab_navi_selected';
+								naviElement.className   = 'tab_navi_selected';
 								buttonElement.className = 'tab_navi_selected';
+								tabNameElement.value    = tab_name;
 							} else {
 								tabElement.style.display = 'none';
 								naviElement.className = 'tab_navi';
