@@ -8,6 +8,8 @@ use Homyaki::Permission_Factory;
 use Homyaki::Visiteur::RowsCalculator;
 use Homyaki::Visiteur::TablesModifier;
 
+use Homyaki::Logger;
+
 use Encode qw(encode);
 use Data::Dumper;
 use URI::Escape;
@@ -49,6 +51,18 @@ sub handler {
 	map {
 		$param_hash->{$_} = $req->param($_);
 	} @params;
+
+	foreach my $upload ($req->upload) {
+		if ($param_hash->{$upload}) {
+			my $file = $req->upload($upload);
+			
+			$param_hash->{$upload} = {
+				file_handler => $file->upload_fh,
+				file_size    => $file->upload_size,
+				file_name    => $file->upload_filename,
+			};
+		}
+	}
 
 	$param_hash->{current_uri} = $r->uri() . '?' . $r->args();
 	$param_hash->{ip_address}  = $ip_address;
