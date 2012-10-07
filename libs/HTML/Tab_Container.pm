@@ -30,7 +30,7 @@ sub add_tab_container {
 		type   => &INPUT_TYPE_DIV,
 	);
 	
-	$body_tag->add_form_element(
+	my $current_tab_element = $body_tag->add_form_element(
 		name   => "tab_panel_${name}",
 		type   => &INPUT_TYPE_HIDDEN,
 		value  => $params->{"tab_panel_${name}"},
@@ -59,8 +59,10 @@ sub add_tab_container {
 			my $tab_element_names = [];
 
 			foreach my $tab_panel_name (keys %{$tab_panels}) {
-				$params->{"tab_panel_${name}"} = $tab_panel_name
-					unless $params->{"tab_panel_${name}"};
+				unless ($params->{"tab_panel_${name}"}){
+					$params->{"tab_panel_${name}"} = $tab_panel_name;
+					$current_tab_element->{value} = $tab_panel_name;
+				}
 
 				my $tab_panel = $tab_panels->{$tab_panel_name};
 
