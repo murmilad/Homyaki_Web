@@ -94,6 +94,7 @@ use constant PARAM_ONLOAD           => 'p_onload';
 use constant PARAM_ONUNLOAD         => 'p_onunload';
 use constant PARAM_TITLE            => 'p_title';
 use constant PARAM_CHECKED          => 'p_checked';
+use constant PARAM_ACCEPT           => 'p_accept';
 
 use constant SUPPORTED_PARAMETERS_MAP => {
 	&PARAM_ID               => 'id',
@@ -129,6 +130,7 @@ use constant SUPPORTED_PARAMETERS_MAP => {
 	&PARAM_ONLOAD           => 'onLoad',
 	&PARAM_ONUNLOAD         => 'onUnload',
 	&PARAM_TITLE            => 'title',
+	&PARAM_ACCEPT           => 'accept',
 	&PARAM_CHECKED          => 'checked',
 };
 
@@ -196,6 +198,7 @@ use constant SUPPORTED_PARAMETERS_MAP => {
 	&PARAM_ONUNLOAD
 	&PARAM_TITLE
 	&PARAM_CHECKED
+	&PARAM_ACCEPT
 
 	&SUPPORTED_PARAMETERS_MAP
 );
