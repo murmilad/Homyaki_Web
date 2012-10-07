@@ -42,9 +42,9 @@ sub add_tab_container {
 	);
 
 	
-	if (scalar(keys %{$tab_panels}) > 0) {
+	if (scalar(@{$tab_panels}) > 0) {
 
-		if (scalar(keys %{$tab_panels}) > 1) {
+		if (scalar(@{$tab_panels}) > 1) {
 
 
 			my $tab_panel_navi = $tab_panel_table->add(
@@ -58,13 +58,11 @@ sub add_tab_container {
 
 			my $tab_element_names = [];
 
-			foreach my $tab_panel_name (sort keys %{$tab_panels}) {
+			foreach my $tab_panel (@{$tab_panels}) {
 				unless ($params->{"tab_panel_${name}"}){
-					$params->{"tab_panel_${name}"} = $tab_panels->{$tab_panel_name}->{name};
-					$current_tab_element->{&PARAM_VALUE} = $tab_panels->{$tab_panel_name}->{name};
+					$params->{"tab_panel_${name}"} = $tab_panel->{name};
+					$current_tab_element->{&PARAM_VALUE} = $tab_panel->{name};
 				}
-
-				my $tab_panel = $tab_panels->{$tab_panel_name};
 
 				my $is_current_tab = $params->{"tab_panel_${name}"} eq $tab_panel->{name};
 
@@ -98,7 +96,7 @@ sub add_tab_container {
 				);
 				my $tab_panel_body_form = $tab_panel_body_row->add(
 					type           => &TAG_COLUMN,
-					&PARAM_COLSPAN => scalar(keys %{$tab_panels}) + 1,
+					&PARAM_COLSPAN => scalar(@{$tab_panels}) + 1,
 					&PARAM_CLASS   => 'tab_body',
 				);
 
@@ -155,7 +153,7 @@ sub add_tab_container {
 				|
 			);
 		} else {
-			my $tab_panel = $tab_panels->{[keys %{$tab_panels}]->[0]};
+			my $tab_panel = $tab_panels->[0];
 
 			my $tab_panel_body_row = $tab_panel_table->add(
 				type   => &TAG_ROW,
