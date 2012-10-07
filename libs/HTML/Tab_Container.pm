@@ -61,7 +61,7 @@ sub add_tab_container {
 			foreach my $tab_panel_name (keys %{$tab_panels}) {
 				unless ($params->{"tab_panel_${name}"}){
 					$params->{"tab_panel_${name}"} = $tab_panel_name;
-					$current_tab_element->{value} = $tab_panel_name;
+					$current_tab_element->{&PARAM_VALUE} = $tab_panel_name;
 				}
 
 				my $tab_panel = $tab_panels->{$tab_panel_name};
