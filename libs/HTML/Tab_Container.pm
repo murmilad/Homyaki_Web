@@ -60,8 +60,8 @@ sub add_tab_container {
 
 			foreach my $tab_panel_name (sort keys %{$tab_panels}) {
 				unless ($params->{"tab_panel_${name}"}){
-					$params->{"tab_panel_${name}"} = $tab_panel_name;
-					$current_tab_element->{&PARAM_VALUE} = $tab_panel_name;
+					$params->{"tab_panel_${name}"} = $tab_panels->{$tab_panel_name}->{name};
+					$current_tab_element->{&PARAM_VALUE} = $tab_panels->{$tab_panel_name}->{name};
 				}
 
 				my $tab_panel = $tab_panels->{$tab_panel_name};
