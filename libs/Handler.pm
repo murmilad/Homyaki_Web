@@ -3,6 +3,7 @@ package Homyaki::Handler;
 use strict;
 use warnings;
 
+use Homyaki::Handler::Redirect;
 use Homyaki::Interface_Factory;
 use Homyaki::Permission_Factory;
 use Homyaki::Visiteur::RowsCalculator;
@@ -51,6 +52,10 @@ sub handler {
 	map {
 		$param_hash->{$_} = $req->param($_);
 	} @params;
+
+	Homyaki::Handler::Redirect->check_redirection(
+		params => $param_hash
+	);
 
 	foreach my $upload ($req->upload) {
 		if ($param_hash->{$upload}) {
