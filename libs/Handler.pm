@@ -64,6 +64,7 @@ sub handler {
 			$param_hash->{$upload} = {
 				file_handler => $file->upload_fh,
 				file_size    => $file->upload_size,
+				file_size    => $file->upload_type,
 				file_name    => $file->upload_filename,
 			};
 		}
