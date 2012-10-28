@@ -23,8 +23,10 @@ use Data::Dumper;
 
 use Homyaki::Tag;
 use Homyaki::HTML;
+use Homyaki::Logger;
 use Homyaki::HTML::Constants;
 use Homyaki::XML::Interface::Navigation;
+
 
 use Homyaki::Interface_Factory;
 use Homyaki::Interface::Interface_Factory;
@@ -68,13 +70,16 @@ sub get_navigation_list {
 	my $params  = $h{params};
 	my $parrent = $h{parrent} || '';
 
+	Homyaki::Logger::print_log('Navigation: params:' . Dumper($params));
+
 	unless (scalar(keys %{$this->{navigation_menue}})) {
 		my $navigation_list = Homyaki::XML::Interface::Navigation->get_navigation();
 		grep {$_ eq 'writer'} @{$user->{permissions}};
 		foreach my $menue (map {$_->{menue}} @{$navigation_list}) {
 			$this->set_menue_items(
-				menue => $menue,
-				user  => $user
+				menue      => $menue,
+				user       => $user,
+				ip_address => $params->{ip_address},
 			);
 		}
 	}
@@ -85,8 +90,10 @@ sub get_navigation_list {
 sub set_menue_items{
 	my $this = shift;
 	my %h = @_;
-	my $menue = $h{menue};
-	my $user  = $h{user};
+	my $menue      = $h{menue};
+	my $user       = $h{user};
+	my $ip_address = $h{ip_address};
+
 	if (ref($menue) eq 'HASH') {
 		foreach my $menue_item (keys %{$menue}){
 
@@ -105,7 +112,6 @@ sub set_menue_items{
 							menue_permission => $menue->{$menue_item}->{permission},
 						);
 						if (scalar(keys %{$form_menue}) > 0){
-							Homyaki::Logger::print_log('Html_Photo_Albums: res:' . Dumper($form_menue));
 							$menue->{$menue_item}->{menue} = $form_menue;
 						}
 					}
@@ -116,18 +122,36 @@ sub set_menue_items{
 			if ($menue->{$menue_item}->{menue}) {
 				push(@{$this->{current_path}}, 'menue');
 				$this->set_menue_items(
-					menue => $menue->{$menue_item}->{menue},
-					user  => $user
+					menue      => $menue->{$menue_item}->{menue},
+					user       => $user,
+					ip_address => $ip_address,
 				);
 				pop(@{$this->{current_path}});
 			} else {
-				my $user_has_permission = 0;
+
+				# Make different modules 
+				my $user_has_permission_by_acc = 0;
 				foreach my $menue_item_permission (@{$menue->{$menue_item}->{permission}}) {
 					if (grep {$_ eq $menue_item_permission} @{$user->{permissions}}) {
-						$user_has_permission = 1;
+						$user_has_permission_by_acc = 1;
 					}
 				}
-				if ($user_has_permission){
+
+				# Make different modules 
+				my $user_has_permission_by_ip = 0;
+				if ($menue->{$menue_item}->{ip}) {
+					foreach my $menue_item_ip (@{$menue->{$menue_item}->{ip}}) {
+						my $ip_address_regexp = $menue_item_ip;
+						$ip_address_regexp =~ s/\./\\./g;
+						$ip_address_regexp =~ s/\*/((\\.)?\\d{1,3})*/g;
+						if ($ip_address =~ /$ip_address_regexp/) {
+							$user_has_permission_by_ip = 1;
+						}
+					}
+				} else {
+					$user_has_permission_by_ip = 1;
+				}
+				if ($user_has_permission_by_acc && $user_has_permission_by_ip){
 					eval ('$this->{navigation_menue}->{"' . join ('"}->{"', @{$this->{current_path}}) . '"} = $menue->{$menue_item};');
 				}
 			}

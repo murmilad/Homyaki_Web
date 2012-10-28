@@ -38,6 +38,7 @@ sub add_navigation {
 
 	my $navigation_list = $self->get_navigation_list(
 		user    => $user,
+		params  => $params,
 		parrent => $params->{navigation_parrent},
 	);
 
