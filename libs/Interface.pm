@@ -17,6 +17,7 @@ use constant PARAMS_REGEX_MAP       => {
 	&INPUT_TYPE_TEXT        => '^[^"\']*$',
 	&INPUT_TYPE_MONEY       => '^\d*(\.\d+)?$',
 	&INPUT_TYPE_NUMBER      => '^\d*(\.\d+)?$',
+	&INPUT_TYPE_LIST        => '^.+$',
 };
 
 require Exporter;
