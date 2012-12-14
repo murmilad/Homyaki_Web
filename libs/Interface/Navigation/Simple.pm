@@ -152,9 +152,12 @@ sub add_navigation_items {
 		foreach my $menue_item (sort {$menue->{$a}->{order} <=> $menue->{$b}->{order}} keys %{$menue}){
 			if ($menue->{$menue_item}->{menue}) {
 				push(@{$group_state}, {expanded => 0});
+
+				my $menue_onclick_event_html = 'onClick="show_hide(\'' . scalar(@{$group_state}) . '\');"';
+
 				my $sub_menue_item = $list_tag->add(
 					type           => &TAG_LIST_ITEM,
-					body_before    => $menue_item . ' <b style="font-size:16px" id="button_' . scalar(@{$group_state}) . '" onClick="show_hide(\'' . scalar(@{$group_state}) . '\');">+</b>',
+					body_before    => qq{<span $menue_onclick_event_html>$menue_item <b style="font-size:16px" id="button_} . scalar(@{$group_state}) . '">+</b></span>',
 					&PARAM_STYLE   => 'list-style-type: none; color:#666666;font-size:10px;margin-top: 8px;',
 				);
 				my $sub_menue_list = $sub_menue_item->add(
