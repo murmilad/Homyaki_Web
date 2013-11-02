@@ -90,7 +90,7 @@ sub handler {
 		my %value = Apache2::Cookie->thaw($value);
 		$user_id = $value{user_id};
 	}
-
+	Homyaki::Logger::print_log("Handler user_id = $user_id");
 	my $permissions = Homyaki::Permission_Factory->create_permissions(
 		handler => $param_hash->{interface},
 	);

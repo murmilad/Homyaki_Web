@@ -51,6 +51,7 @@ sub get_tag {
 		params => $params,
 		errors => $errors,
 		header => $header,
+		user   => $user,
 	);
 
 	my $root_tag = $root->{root};
@@ -139,6 +140,7 @@ sub get_tag {
 		errors   => $errors,
 		form_id  => 'main_form',
 		body_tag => $main_form,
+		user     => $user,
 	);
 
 	my $form_tag      = $table->{root};

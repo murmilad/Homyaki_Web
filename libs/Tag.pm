@@ -95,6 +95,7 @@ use constant PARAM_ONUNLOAD         => 'p_onunload';
 use constant PARAM_TITLE            => 'p_title';
 use constant PARAM_CHECKED          => 'p_checked';
 use constant PARAM_ACCEPT           => 'p_accept';
+use constant PARAM_ALT              => 'p_alt';
 
 use constant SUPPORTED_PARAMETERS_MAP => {
 	&PARAM_ID               => 'id',
@@ -132,6 +133,7 @@ use constant SUPPORTED_PARAMETERS_MAP => {
 	&PARAM_TITLE            => 'title',
 	&PARAM_ACCEPT           => 'accept',
 	&PARAM_CHECKED          => 'checked',
+	&PARAM_ALT              => 'alt',
 };
 
 @Homyaki::Tag::ISA = qw(Exporter);
@@ -199,6 +201,7 @@ use constant SUPPORTED_PARAMETERS_MAP => {
 	&PARAM_TITLE
 	&PARAM_CHECKED
 	&PARAM_ACCEPT
+	&PARAM_ALT
 
 	&SUPPORTED_PARAMETERS_MAP
 );
