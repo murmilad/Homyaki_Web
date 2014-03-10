@@ -30,6 +30,13 @@ sub add_page_body {
                 body => ' ',
         );
 
+	$tag_head->add(
+		type => &TAG_JS,
+		&PARAM_SRC  => '/js/jquery.js',
+		&PARAM_TYPE => 'text/javascript',
+		body => ' ',
+	);
+
 	my $tag_meta = $tag_head->add(
 		type              => &TAG_META,
 		&PARAM_HTTP_EQUIV => 'pragma',
@@ -184,6 +191,7 @@ sub add_form_element {
 	my $hidden   = $h{hidden};
 	my $default_value = $h{default_value};
 	my $link     = $h{'link'};
+	
 
 	my $tag_params = {};
 	foreach my $param (keys %h) {

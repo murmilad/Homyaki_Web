@@ -79,6 +79,16 @@ sub get_tag {
 		header        => $header,
 	);
 
+	my $block_refresh_js = "\$(document).on(\"keydown\", safeF5);";
+
+	my $refresh_js = $this->get_refresh_js();
+	$block_refresh_js .= "function safeF5(e) { if ((e.which || e.keyCode) == 116) e.preventDefault(); $refresh_js};";
+
+	$body->add(
+		type => &TAG_JS,
+		&PARAM_TYPE => 'text/javascript',
+		body => $block_refresh_js,
+	);
 
 	if (ref($errors) eq 'HASH' && scalar(keys %{$errors}) > 0) {
 		$body->add_error_list(errors => $errors);
@@ -205,5 +215,9 @@ sub get_navigation {
 
 	return $navigation;
 }
+
+sub get_refresh_js {
+	return '';
+};
 
 1;
