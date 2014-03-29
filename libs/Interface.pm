@@ -82,7 +82,7 @@ sub get_tag {
 	my $block_refresh_js = "\$(document).on(\"keydown\", safeF5);";
 
 	my $refresh_js = $this->get_refresh_js();
-	$block_refresh_js .= "function safeF5(e) { if ((e.which || e.keyCode) == 116) e.preventDefault(); $refresh_js};";
+	$block_refresh_js .= "function safeF5(e) { if ((e.which || e.keyCode) == 116){ e.preventDefault(); $refresh_js}};";
 
 	$body->add(
 		type => &TAG_JS,

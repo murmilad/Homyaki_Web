@@ -30,9 +30,23 @@ sub add_page_body {
                 body => ' ',
         );
 
+
+	$tag_head->add(
+		type => &TAG_LINK,
+		&PARAM_REL  => 'stylesheet',
+		&PARAM_HREF => '/css/jquery-ui.css',
+		body => ' ',
+	);
+
 	$tag_head->add(
 		type => &TAG_JS,
 		&PARAM_SRC  => '/js/jquery.js',
+		&PARAM_TYPE => 'text/javascript',
+		body => ' ',
+	);
+	$tag_head->add(
+		type => &TAG_JS,
+		&PARAM_SRC  => '/js/jquery-ui.js',
 		&PARAM_TYPE => 'text/javascript',
 		body => ' ',
 	);

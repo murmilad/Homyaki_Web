@@ -1,4 +1,11 @@
 package Homyaki::Apache_Log;
+require Exporter;
+@ISA = qw(Exporter);
+@EXPORT_OK = qw(
+	&HTTP_LOG_PATH
+	load_hosts
+	get_ip_data
+);
 
 use strict;
 
@@ -11,6 +18,7 @@ use IO::File;
 use Geo::IP;
 
 use Data::Dumper;
+
 
 use constant GEO_DATA_BUFFER_PATH => '/home/alex/.geodata_buffer.bin';
 

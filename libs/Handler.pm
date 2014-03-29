@@ -103,69 +103,74 @@ sub handler {
 		form => $param_hash->{form}
 	);
 
-	if ($param_hash->{current_action} && $param_hash->{current_action} ne 'view'){
-		if ($interface->is_auth()){
-			my $result = $interface->set_auth(params => $param_hash);
-			if (keys %{$result->{errors}}) {
-				$errors = $result->{errors};
-			} elsif ($result->{user}){
-				my $value = Apache2::Cookie->freeze({user_id => $result->{user}->{id}});
-				$cookie = Apache2::Cookie->new(
-					$r,
-					-name   => $param_hash->{interface},
-					-value  => unpack("H*",encrypt($value, &CRYPT_KEY)),
+	if ( $param_hash->{ajax}) {
+		print $interface->get_ajax_html(
+			params  => $param_hash,
+		);
+	} else {
+		if ($param_hash->{current_action} && $param_hash->{current_action} ne 'view'){
+			if ($interface->is_auth()){
+				my $result = $interface->set_auth(params => $param_hash);
+				if (keys %{$result->{errors}}) {
+					$errors = $result->{errors};
+				} elsif ($result->{user}){
+					my $value = Apache2::Cookie->freeze({user_id => $result->{user}->{id}});
+					$cookie = Apache2::Cookie->new(
+						$r,
+						-name   => $param_hash->{interface},
+						-value  => unpack("H*",encrypt($value, &CRYPT_KEY)),
+					);
+					$cookie->bake($r);
+					$user = $result->{user};
+				}
+			}
+	
+			unless (keys %{$errors}) {
+				$errors = $interface->check_params(
+					params => $param_hash,
+					user   => $user,
 				);
-				$cookie->bake($r);
-				$user = $result->{user};
+				unless (scalar(keys %{$errors}) > 0) {
+					$set_result = $interface->set_params(
+						params  => $param_hash,
+						user    => $user,
+					);
+					$errors = $set_result->{errors};
+	#				if (scalar(keys %{$set_result->{errors}}) > 0) {
+	#					@{$errors}{keys %{$set_result->{errors}}} = values %{$set_result->{errors}};
+	#				}
+				}
 			}
 		}
-
-		unless (keys %{$errors}) {
-			$errors = $interface->check_params(
-				params => $param_hash,
-				user   => $user,
-			);
-			unless (scalar(keys %{$errors}) > 0) {
-				$set_result = $interface->set_params(
-					params  => $param_hash,
-					user    => $user,
-				);
-				$errors = $set_result->{errors};
-#				if (scalar(keys %{$set_result->{errors}}) > 0) {
-#					@{$errors}{keys %{$set_result->{errors}}} = values %{$set_result->{errors}};
-#				}
-			}
+	
+		my $db_param_hash = $interface->get_params(
+			params  => $param_hash,
+			user    => $user,
+		);
+	
+	
+		if (scalar(keys %{$errors}) > 0) {
+			@{$db_param_hash}{keys %{$param_hash}} = values %{$param_hash};
 		}
-	}
-
-	my $db_param_hash = $interface->get_params(
-		params  => $param_hash,
-		user    => $user,
-	);
-
-
-	if (scalar(keys %{$errors}) > 0) {
-		@{$db_param_hash}{keys %{$param_hash}} = values %{$param_hash};
-	}
-
-	$param_hash = $db_param_hash;
-
-	$interface->make_tags(
-		params  => $param_hash,
-		errors  => $errors,
-		user    => $user,
-	);
-
-	my $rows_calculator = Homyaki::Visiteur::RowsCalculator->new();
-	$interface->{tags}->visit($rows_calculator);
-
-	my $tables_modifier = Homyaki::Visiteur::TablesModifier->new(
-		params => $rows_calculator->{params}
-	);
-	$interface->{tags}->visit($tables_modifier);
-
-	print $interface->get_html();
-
+	
+		$param_hash = $db_param_hash;
+	
+		$interface->make_tags(
+			params  => $param_hash,
+			errors  => $errors,
+			user    => $user,
+		);
+	
+		my $rows_calculator = Homyaki::Visiteur::RowsCalculator->new();
+		$interface->{tags}->visit($rows_calculator);
+	
+		my $tables_modifier = Homyaki::Visiteur::TablesModifier->new(
+			params => $rows_calculator->{params}
+		);
+		$interface->{tags}->visit($tables_modifier);
+	
+		print $interface->get_html();
+	}	
 	return Apache2::Const::OK;
 }
 1;
