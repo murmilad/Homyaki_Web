@@ -52,6 +52,7 @@ sub handler {
 	map {
 		$param_hash->{$_} = $req->param($_);
 	} @params;
+	Homyaki::Logger::print_log("Handler parameters " . Dumper($param_hash));
 
 	Homyaki::Handler::Redirect->check_redirection(
 		params => $param_hash
